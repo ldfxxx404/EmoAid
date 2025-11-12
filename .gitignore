@@ -1,2 +1,3 @@
 .EmoVenv
 .env
+__pycache__
