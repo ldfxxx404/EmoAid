@@ -34,31 +34,3 @@ async def generalHandler(message: Message):
     await message.reply(choice(replyMessages))
 
 
-# @dp.message(CommandStart())
-# async def startHandler(message: Message) -> None:
-#     # Hello message
-#     await message.answer(choice(startMessages))
-
-
-# @dp.message()
-# async def dangerWordHandler(message: Message) -> None:
-#     textInMessage = message.text.lower()
-#     for word in dangerWords:
-#         if word in textInMessage:
-#             await message.reply(choice(replyMessages))
-#             return
-        
-
-# @dp.message()
-# async def questionReplyHandler(message: Message) -> None:
-#     textInMessage = message.text.lower()
-#     for word in askMessages:
-#         if word in textInMessage:
-#             await message.reply(choice(replyToAskMessage))
-#             return
-
-# @dp.message()
-# async def replyHandler(message: Message) -> None:
-#     # Reply messages
-#     await message.reply(choice(replyMessages))
-
