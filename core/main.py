@@ -2,12 +2,12 @@ import asyncio
 import logging
 import sys
 
-from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram import Bot
 
 from config import TOKEN
-from loader import dp
+from utils.loader import dp
 import bot
 
 
