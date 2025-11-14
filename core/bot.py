@@ -20,7 +20,7 @@ async def startHandler(message: Message) -> None:
 
 @dp.message()
 async def generalHandler(message: Message) -> None:
-    if message.text.lower() in [x.lower() for x in askMessages]:
+    if message.text.lower() in [msg.lower() for msg in askMessages]:
         await message.reply(choice(replyToAskMessage))
         return
 
