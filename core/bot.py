@@ -5,11 +5,11 @@ from utils.templateMessages import (
     reply_to_ask_messages,
     reply_messages,
     start_messages,
-    ask_messages
+    ask_messages,
 )
 
 from aiogram.filters import CommandStart
-from aiogram.types import Message # , FSInputFile
+from aiogram.types import Message, FSInputFile, InputFile
 from aiogram.enums import ChatAction
 
 
@@ -27,6 +27,10 @@ async def general_handler(message: Message) -> None:
     await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
     await asyncio.sleep(2.5)
     await message.reply(choice(reply_messages))
+
+    await message.bot.send_chat_action(message.chat.id, ChatAction.UPLOAD_PHOTO)
+    # photo = FSInputFile("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDrty1oP6IZ9xUx33QIlQOEvaI-aFk_2QMsQ&s")
+    await message.answer_photo(photo='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDrty1oP6IZ9xUx33QIlQOEvaI-aFk_2QMsQ&s', caption='Внимательно посмотри на кота, что ты чувствуешь?')
     return
 
 
