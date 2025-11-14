@@ -9,4 +9,7 @@ services:
       - .env
     ports:
       - "9900:9900"
+    volumes:
+      - ./pictures:/app/pictures
+
     command: ["/app/venv/bin/python", "main.py"]
