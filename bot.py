@@ -1,7 +1,7 @@
 from random import choice
 import re
 from loader import dp
-from templateMessages import replyMessages, startMessages, dangerWords, askMessages, replyToAskMessage
+from templateMessages import replyMessages, startMessages, askMessages, replyToAskMessage
 
 from aiogram.filters import CommandStart
 from aiogram.types import Message
@@ -18,11 +18,6 @@ async def generalHandler(message: Message):
 
     text = message.text.lower()
     text = re.sub(r'[^\w\s]', '', text)
-
-    for word in dangerWords:
-        if word in text:
-            await message.reply(choice(replyMessages))
-            return
 
     for phrase in askMessages:
         phrase_clean = phrase.lower()
