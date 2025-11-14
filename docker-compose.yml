@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: emoaid
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "9900:9900"
+    command: ["/app/venv/bin/python", "main.py"]
