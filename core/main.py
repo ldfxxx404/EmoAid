@@ -1,14 +1,14 @@
-import asyncio
-import logging
-from os import getenv
-import sys
-from loader import dp
 from dotenv import load_dotenv
-import bot
+from utils.loader import dp
+from os import getenv
+from core import bot
+import logging
+import asyncio
+import sys
 
-from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram import Bot
 
 load_dotenv()
 
@@ -16,6 +16,7 @@ TOKEN = getenv("BOT_TOKEN")
 
 
 async def main() -> None:
+
     bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     await dp.start_polling(bot)
 
