@@ -13,4 +13,4 @@ services:
       - PYTHONPATH=/app
 
 
-    command: ["/app/venv/bin/python", "/app/core/main.py"]
+    command: ["/app/venv/bin/python", "/app/entrypoints/main.py"]
