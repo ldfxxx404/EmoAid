@@ -97,13 +97,13 @@ reply_to_ask_message = [
 ]
 
 
-def get_random_start():
+def get_random_start() -> None:
     return choice(start_messages)
 
 
-def get_random_general_reply():
+def get_random_general_reply() -> None:
     return choice(reply_messages)
 
 
-def get_random_reply_to_ask_messages():
+def get_random_reply_to_ask_messages() -> None:
     return choice(reply_to_ask_message)
