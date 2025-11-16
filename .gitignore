@@ -67,6 +67,7 @@ pip-wheel-metadata/
 # ----------------------------------------
 # VS Code
 .vscode/
+TODO.md
 
 # PyCharm / JetBrains
 .idea/
