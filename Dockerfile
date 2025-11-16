@@ -12,5 +12,3 @@ RUN python3 -m venv /app/venv
 COPY . .
 
 RUN /app/venv/bin/pip install --no-cache-dir -r req.txt
-
-EXPOSE 9900

@@ -7,9 +7,10 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    ports:
-      - "9900:9900"
     volumes:
       - ./pictures:/app/pictures
+    environment:
+      - PYTHONPATH=/app
 
-    command: ["/app/venv/bin/python", "main.py"]
+
+    command: ["/app/venv/bin/python", "/app/entrypoints/main.py"]
