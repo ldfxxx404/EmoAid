@@ -1,38 +1,31 @@
-import asyncio
-
-from aiogram.enums import ChatAction
+from utils.images import choice_rand_picture
 from aiogram.filters import CommandStart
-from aiogram.types import FSInputFile, Message
+from aiogram.enums import ChatAction
+from aiogram.types import Message
 
-from config import PHOTO_PATH
-from data.templateMessages import (
-    get_random_general_reply,
-    get_random_reply_to_ask,
-    get_random_start,
-)
-from loader import dp
-from logic.logic import find_matching_phrase
+from utils.loader import dp
+import asyncio
+from utils.template_messages import ask_messages, start, reply, answer
 
 
 @dp.message(CommandStart())
-async def start_handler(message: Message):
-    await message.answer(get_random_start())
+async def start_handler(message: Message) -> None:
+    await message.answer(start())
 
 
 @dp.message()
-async def general_handler(message: Message):
+async def general_handler(message: Message) -> None:
+    if message.text.lower() in [msg.lower() for msg in ask_messages]:
+        await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
+        await asyncio.sleep(2.5)
+        await message.reply(answer())
+        return
+
     await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
     await asyncio.sleep(2.5)
+    await message.reply(reply())
 
-    if not message.text:
-        return
-
-    if find_matching_phrase(message.text):
-        await message.reply(get_random_reply_to_ask())
-
-        await message.bot.send_chat_action(message.chat.id, ChatAction.UPLOAD_PHOTO)
-        photo = FSInputFile(PHOTO_PATH)
-        await message.answer_photo(photo=photo, caption="фото")
-        return
-
-    await message.reply(get_random_general_reply())
+    await message.bot.send_chat_action(message.chat.id, ChatAction.UPLOAD_PHOTO)
+    await asyncio.sleep(1.5)
+    await message.answer_photo(photo=choice_rand_picture())
+    return
