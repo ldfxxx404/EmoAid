@@ -1,1 +1,1 @@
-from . import loader, template_messages, images
+from . import images, loader
