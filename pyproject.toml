@@ -4,6 +4,11 @@ line-length = 100
 indent-width = 4
 fix = true
 
+extend-exclude = [
+    "data/template_messages.py",
+    "entrypoints/main.py",
+]
+
 [tool.ruff.format]
 preview = true
 quote-style = "double"
@@ -33,6 +38,7 @@ select = [
 ignore = [
     "E501",
     "D",
+    "S311",
 ]
 
 

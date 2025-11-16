@@ -4,14 +4,14 @@ from aiogram.enums import ChatAction
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from utils.images import choice_rand_picture
-from utils.loader import dp
 from data.template_messages import (
     ask_messages,
     get_random_general_reply,
+    get_random_reply_to_ask_messages,
     get_random_start,
-    get_random_reply_to_ask_messages
 )
+from utils.images import choice_rand_picture
+from utils.loader import dp
 
 
 @dp.message(CommandStart())
