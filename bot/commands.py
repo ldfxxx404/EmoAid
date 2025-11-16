@@ -4,4 +4,4 @@ from aiogram.filters import Command
 
 @dp.message(Command("online"))
 async def handle_online(message: Message) -> None:
-    await message.reply("djfas")
+    await message.reply("Ignore reply from bot")
