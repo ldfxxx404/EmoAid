@@ -9,5 +9,5 @@ pictures_url = [
 ]
 
 
-def choice_rand_picture():
+def choice_rand_picture() -> None:
     return choice(pictures_url)
