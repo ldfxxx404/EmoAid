@@ -1,14 +1,9 @@
-FROM alpine:latest
+FROM python:3.13.9
 
-WORKDIR /app
+WORKDIR /usr/src/app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN apk update && \
-    apk add --no-cache \
-        python3 \
-        py3-pip
+COPY src .
 
-RUN python3 -m venv /app/venv
-
-COPY . .
-
-RUN /app/venv/bin/pip install --no-cache-dir -r req.txt
+CMD ["/bin/bash", "-c", "python main.py"]
