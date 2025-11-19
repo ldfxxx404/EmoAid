@@ -1,7 +1,15 @@
-from utils.loader import dp
-from aiogram.types import Message
-from aiogram.filters import Command
+from aiogram.types import BotCommand
+from aiogram.methods import SetMyCommands
+from aiogram import Bot
 
-@dp.message(Command("online"))
-async def handle_online(message: Message) -> None:
-    await message.reply("Ignore reply from bot")
+COMMANDS = [
+    BotCommand(command="online", description="online"),
+    BotCommand(command="offline", description="offline"),
+]
+
+async def bot_commands(bot: Bot) -> None:
+    await bot(
+        SetMyCommands(
+            commands=COMMANDS, language_code="en"
+        )
+    )

@@ -1,7 +1,8 @@
 import asyncio
 import logging
 import sys
-import bot
+
+from bot.commands import bot_commands
 
 from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
@@ -12,8 +13,9 @@ from utils.loader import dp
 
 
 async def main() -> None:
-    bot_instance = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    await dp.start_polling(bot_instance)
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    await bot_commands(bot)
+    await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
