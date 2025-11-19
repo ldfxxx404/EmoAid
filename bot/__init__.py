@@ -1,1 +1,1 @@
-from . import handlers
+from . import handlers, commands
