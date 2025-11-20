@@ -1,11 +1,10 @@
 from __future__ import annotations
-import aiogram, aiogram.filters
-import data, utils
+import aiogram, aiogram.filters, aiogram.fsm.storage.base, aiogram.fsm.context
+import dispatcher as dp, data, utils
 
 
 class MessagesRouter(aiogram.Router):
     def __init__(self, logger: data.LoggerService) -> None:
-        self._strings = data.StringsProvider()
         self._logger = logger
 
         super().__init__(
@@ -23,15 +22,50 @@ class MessagesRouter(aiogram.Router):
     async def message_handler(
             self,
             message: aiogram.types.Message,
-            bot: aiogram.Bot,
+            state: aiogram.fsm.context.FSMContext,
+            dispatcher: dp.AiogramDispatcher,
     ) -> None:
-        self._logger.log_user_interaction(message.from_user, message.text)
+        is_psychologist = message.from_user.id == dispatcher._config.settings.psychologist_id
 
-        await bot.send_message(
-            chat_id=message.chat.id,
-            message_thread_id=utils.get_message_thread_id(message),
-            text=self._strings.menu.reply,
-            reply_to_message_id=message.message_id,
-        )
+        self._logger.log_user_interaction(message.from_user, f"{message.text} ({is_psychologist=})")
+
+        if is_psychologist:
+            if message.reply_to_message:
+                state_data = await state.get_data()
+
+                await dispatcher._bot.send_message(
+                    chat_id=state_data[str(message.reply_to_message.message_id)],
+                    text=message.text,
+                    reply_to_message_id=message.reply_to_message.forward_from_message_id,
+                )
+            else:
+                await dispatcher._bot.send_message(
+                    chat_id=message.chat.id,
+                    message_thread_id=utils.get_message_thread_id(message),
+                    text=dispatcher._strings.menu.psychologist,
+                    reply_to_message_id=message.message_id,
+                )
+        else:
+            forwarded_message = await dispatcher._bot.forward_message(
+                chat_id=dispatcher._config.settings.psychologist_id,
+                message_thread_id=utils.get_message_thread_id(message),
+                from_chat_id=message.chat.id,
+                message_id=message.message_id,
+            )
+
+            psychologist_state = aiogram.fsm.context.FSMContext(
+                storage=dispatcher.storage,
+                key=aiogram.fsm.storage.base.StorageKey(
+                    chat_id=dispatcher._config.settings.psychologist_id,
+                    user_id=dispatcher._config.settings.psychologist_id,
+                    bot_id=(await dispatcher._bot.me()).id,
+                )
+            )
+
+            await psychologist_state.update_data(
+                data={
+                    str(forwarded_message.message_id): message.from_user.id,
+                }
+            )
 
     # endregion

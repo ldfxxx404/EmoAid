@@ -13,6 +13,7 @@ class AiogramDispatcher(aiogram.Dispatcher):
     ]
 
     def __init__(self) -> None:
+        self._strings = data.StringsProvider()
         self._config = data.ConfigManager()
         self._logger = data.LoggerService(
             filename=__name__,
