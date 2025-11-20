@@ -2,7 +2,7 @@ from __future__ import annotations
 import pyquoks, aiogram, aiogram.fsm.state
 
 
-# region Managers
+# region Providers
 
 class StringsProvider(pyquoks.data.StringsProvider):
     class MenuStrings(pyquoks.data.StringsProvider.Strings):
