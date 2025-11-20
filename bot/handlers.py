@@ -34,5 +34,4 @@ async def general_handler(message: Message) -> None:
     await message.bot.send_chat_action(message.chat.id, ChatAction.UPLOAD_PHOTO)
     await asyncio.sleep(1.5)
     await message.answer_photo(photo=choice_rand_picture())
-    # handle_online
     return
