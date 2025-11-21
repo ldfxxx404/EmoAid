@@ -37,14 +37,16 @@ class ConfigManager(pyquoks.data.ConfigManager):
 
         _VALUES = {
             "bot_token": str,
+            "chat_id": int,
             "file_logging": bool,
-            "psychologist_id": int,
+            "psychologists_list": list,
             "skip_updates": bool,
         }
 
         bot_token: str
+        chat_id: int
         file_logging: bool
-        psychologist_id: int
+        psychologists_list: list
         skip_updates: bool
 
     _OBJECTS = {
