@@ -30,7 +30,10 @@ class MessagesRouter(aiogram.Router):
         self._logger.log_user_interaction(message.from_user, f"{message.text} ({is_psychologist=})")
 
         if is_psychologist:
-            if message.reply_to_message:
+            try:
+                if not message.reply_to_message:
+                    raise Exception()
+
                 state_data = await state.get_data()
 
                 await dispatcher._bot.send_message(
@@ -38,7 +41,7 @@ class MessagesRouter(aiogram.Router):
                     text=message.text,
                     reply_to_message_id=message.reply_to_message.forward_from_message_id,
                 )
-            else:
+            except:
                 await dispatcher._bot.send_message(
                     chat_id=message.chat.id,
                     message_thread_id=utils.get_message_thread_id(message),
