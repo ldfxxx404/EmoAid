@@ -26,33 +26,34 @@ class MessagesRouter(aiogram.Router):
             dispatcher: dp.AiogramDispatcher,
     ) -> None:
         is_psychologist_chat = message.chat.id == dispatcher._config.settings.chat_id
+        has_reply_to_forwarded = bool(message.reply_to_message and message.reply_to_message.forward_origin)
 
-        self._logger.log_user_interaction(message.from_user, f"{message.text} ({is_psychologist_chat=})")
+        self._logger.log_user_interaction(
+            user=message.from_user,
+            interaction=f"{message.text} ({is_psychologist_chat=}, {has_reply_to_forwarded=})",
+        )
 
         if is_psychologist_chat:
-            try:
-                if not message.reply_to_message:
-                    raise Exception()
+            if has_reply_to_forwarded:
+                try:
+                    state_data = await state.get_data()
+                    original_chat_id = state_data[str(message.reply_to_message.message_id)]
 
-                state_data = await state.get_data()
-
-                await dispatcher._bot.send_message(
-                    chat_id=state_data[str(message.reply_to_message.message_id)],
-                    message_thread_id=utils.get_message_thread_id(message.reply_to_message),
-                    text=message.text,
-                    reply_to_message_id=message.reply_to_message.forward_from_message_id,
-                )
-            except:
-                await dispatcher._bot.send_message(
-                    chat_id=message.chat.id,
-                    message_thread_id=utils.get_message_thread_id(message),
-                    text=dispatcher._strings.menu.psychologist,
-                    reply_to_message_id=message.message_id,
-                )
+                    await dispatcher._bot.send_message(
+                        chat_id=original_chat_id,
+                        text=message.text,
+                        reply_to_message_id=message.reply_to_message.forward_from_message_id,
+                    )
+                except:
+                    await dispatcher._bot.send_message(
+                        chat_id=message.chat.id,
+                        message_thread_id=utils.get_message_thread_id(message),
+                        text=dispatcher._strings.menu.no_sender_data,
+                        reply_to_message_id=message.message_id,
+                    )
         else:
             forwarded_message = await dispatcher._bot.forward_message(
                 chat_id=dispatcher._config.settings.chat_id,
-                message_thread_id=utils.get_message_thread_id(message),
                 from_chat_id=message.chat.id,
                 message_id=message.message_id,
             )
