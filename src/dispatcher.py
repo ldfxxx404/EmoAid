@@ -20,6 +20,7 @@ class AiogramDispatcher(aiogram.Dispatcher):
     def __init__(self) -> None:
         self._strings = data.StringsProvider()
         self._config = data.ConfigManager()
+        self._keyboards = data.KeyboardProvider()
         self._logger = data.LoggerService(
             filename=__name__,
             file_handling=self._config.settings.file_logging,
@@ -47,6 +48,9 @@ class AiogramDispatcher(aiogram.Dispatcher):
         )
 
         self.include_routers(
+            routers.callbacks.CallbacksRouter(
+                logger=self._logger,
+            ),
             routers.commands.CommandsRouter(
                 logger=self._logger,
             ),

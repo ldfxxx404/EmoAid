@@ -51,7 +51,7 @@ class MessagesRouter(aiogram.Router):
                         text=dispatcher._strings.menu.no_sender_data,
                         reply_to_message_id=message.message_id,
                     )
-        else:
+        elif message.text:
             forwarded_message = await dispatcher._bot.forward_message(
                 chat_id=dispatcher._config.settings.chat_id,
                 from_chat_id=message.chat.id,
