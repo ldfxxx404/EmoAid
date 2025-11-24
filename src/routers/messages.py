@@ -1,6 +1,13 @@
 from __future__ import annotations
-import aiogram, aiogram.filters, aiogram.fsm.storage.base, aiogram.fsm.context
-import dispatcher as dp, data, utils
+
+import aiogram
+import aiogram.filters
+import aiogram.fsm.context
+import aiogram.fsm.storage.base
+
+import data
+import dispatcher as dp
+import utils
 
 
 class MessagesRouter(aiogram.Router):
