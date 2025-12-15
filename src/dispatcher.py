@@ -1,13 +1,12 @@
-from __future__ import annotations
-
-import logging
-
 import aiogram
 import aiogram.client.default
 import aiogram.exceptions
 
+import callbacks
+import commands
+import constants
 import data
-import routers
+import messages
 
 
 class AiogramDispatcher(aiogram.Dispatcher):
@@ -23,15 +22,17 @@ class AiogramDispatcher(aiogram.Dispatcher):
         aiogram.exceptions.TelegramForbiddenError,
     ]
 
-    def __init__(self) -> None:
-        self._strings = data.StringsProvider()
-        self._config = data.ConfigManager()
-        self._keyboards = data.KeyboardProvider()
-        self._logger = data.LoggerService(
-            filename=__name__,
-            file_handling=self._config.settings.file_logging,
-            level=logging.INFO,
-        )
+    def __init__(
+            self,
+            strings_provider: data.StringsProvider,
+            config_manager: data.ConfigManager,
+            keyboards_provider: data.KeyboardsProvider,
+            logger_service: data.LoggerService,
+    ) -> None:
+        self._strings = strings_provider
+        self._keyboards = keyboards_provider
+        self._config = config_manager
+        self._logger = logger_service
         self._bot = aiogram.Bot(
             token=self._config.settings.bot_token,
             default=aiogram.client.default.DefaultBotProperties(
@@ -54,14 +55,25 @@ class AiogramDispatcher(aiogram.Dispatcher):
         )
 
         self.include_routers(
-            routers.callbacks.CallbacksRouter(
-                logger=self._logger,
+            callbacks.CallbacksRouter(
+                strings_provider=self._strings,
+                config_manager=self._config,
+                logger_service=self._logger,
+                bot=self._bot,
             ),
-            routers.commands.CommandsRouter(
-                logger=self._logger,
+            commands.CommandsRouter(
+                strings_provider=self._strings,
+                keyboards_provider=self._keyboards,
+                config_manager=self._config,
+                logger_service=self._logger,
+                bot=self._bot,
             ),
-            routers.messages.MessagesRouter(
-                logger=self._logger,
+            messages.MessagesRouter(
+                strings_provider=self._strings,
+                config_manager=self._config,
+                logger_service=self._logger,
+                storage=self.storage,
+                bot=self._bot,
             ),
         )
 
@@ -76,17 +88,15 @@ class AiogramDispatcher(aiogram.Dispatcher):
             )
 
             await self.start_polling(self._bot)
-        except Exception as exception:
-            self._logger.log_error(
-                exception=exception,
-            )
+        except Exception as e:
+            self._logger.log_error(e)
 
     # endregion
 
     # region Handlers
 
     async def error_handler(self, event: aiogram.types.ErrorEvent) -> None:
-        if type(event.exception) not in self._IGNORED_EXCEPTIONS:
+        if type(event.exception) not in constants.IGNORED_EXCEPTIONS:
             self._logger.log_error(
                 exception=event.exception,
             )

@@ -1,6 +1,5 @@
-from __future__ import annotations
-
 import datetime
+import textwrap
 
 import aiogram
 import aiogram.fsm.state
@@ -28,27 +27,30 @@ class StringsProvider(pyquoks.data.StringsProvider):
     class MenuStrings(pyquoks.data.StringsProvider.Strings):
         @property
         def start(self) -> str:
-            return (
-                "Привет, специалист скоро ответит.\n"
-                "Если хочешь, можешь описать свою проблему подробнее."
+            return textwrap.dedent(
+                """\
+                Привет, специалист скоро ответит.
+                Если хочешь, можешь описать свою проблему подробнее.
+                """,
             )
 
         @staticmethod
-        def info(bot_full_name: str, time_started: datetime.datetime) -> str:
-            return (
-                f"Информация о {bot_full_name}:\n"
-                f"\n"
-                f"Запущен: {time_started.strftime("%d.%m.%y %H:%M:%S")} UTC\n"
-                f"\n"
-                f"Исходный код на GitHub:\n"
-                f"https://github.com/ldfxxx404/EmoAid\n"
+        def info(bot: aiogram.types.User, time_started: datetime.datetime) -> str:
+            return textwrap.dedent(
+                f"""\
+                Информация о {bot.full_name}:
+                
+                Дата запуска: <b>{time_started.astimezone(datetime.UTC).strftime("%d.%m.%y %H:%M:%S")} UTC</b>
+                """,
             )
 
         @property
         def no_sender_data(self) -> str:
-            return (
-                "Данные о пользователе отсутствуют!\n"
-                "Свяжитесь с отправителем самостоятельно."
+            return textwrap.dedent(
+                """\
+                Данные о пользователе отсутствуют!
+                Свяжитесь с отправителем самостоятельно.
+                """,
             )
 
     _OBJECTS = {
@@ -63,8 +65,8 @@ class StringsProvider(pyquoks.data.StringsProvider):
 
 
 class ButtonsProvider:
-    def __init__(self) -> None:
-        self._strings = StringsProvider()
+    def __init__(self, strings_provider: StringsProvider) -> None:
+        self._strings = strings_provider
 
     @property
     def export_logs(self) -> aiogram.types.InlineKeyboardButton:
@@ -74,9 +76,9 @@ class ButtonsProvider:
         )
 
 
-class KeyboardProvider:
-    def __init__(self) -> None:
-        self._buttons = ButtonsProvider()
+class KeyboardsProvider:
+    def __init__(self, buttons_provider: ButtonsProvider) -> None:
+        self._buttons = buttons_provider
 
     @property
     def info(self) -> aiogram.types.InlineKeyboardMarkup:
